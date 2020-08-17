@@ -11,6 +11,11 @@ const settings = {
         height: 200
     },
     opacityTreeshold: 128,
+    line: {
+        width: 2,
+        maxLength: 35,
+        color: 'rgba(255,255,255,1)'
+    },
     magnet: {
         force: 12
     },
@@ -80,15 +85,9 @@ class Particle {
     }
 }
 
-
-/**
- * PROGRAM BODY
- */
-
+// PROGRAM BODY
 init();
 animate(); 
-
-
 
 function init() {
    /* for(let i = 0; i<100; i++) {
@@ -115,8 +114,30 @@ function animate() {
         particle.draw();
         particle.update();
     })
+    connect();
     requestAnimationFrame(animate)
 }
+
+function connect() {
+    for(let a = 0; a < particles.length; a++ ) {
+        for(let b = a; b < particles.length; b++) {
+            let dx = particles[a].x - particles[b].x;
+            let dy = particles[a].y - particles[b].y;
+            let distance = Math.sqrt(dx * dx + dy * dy) ;
+            if(distance < settings.line.maxLength) {
+                let color = settings.line.color;
+                let opacity = 1 - (distance/settings.line.maxLength);
+                ctx.strokeStyle = color.replace('1', opacity );
+                ctx.lineWidth = settings.line.width;
+                ctx.beginPath()
+                ctx.moveTo(particles[a].x, particles[a].y);
+                ctx.lineTo(particles[b].x, particles[b].y);
+                ctx.stroke();
+            }
+        }
+    }
+}
+
 
 window.addEventListener('mousemove', event => {
     mouse.x = event.x;
