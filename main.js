@@ -10,6 +10,10 @@ const settings = {
         width: 200,
         height: 100
     },
+    magnet: {
+        range: 300,
+        force: 3
+    },
     offset: 0
 }
 const mouse = {
@@ -49,6 +53,18 @@ class Particle {
         ctx.closePath();
         ctx.fill();
     }
+    update() {
+        let dx = mouse.x - this.x;
+        let dy = mouse.y - this.y;
+        let distance = Math.sqrt(dx * dx + dy * dy);
+        if(distance < settings.magnet.range) {
+            let forceDirectionX = dx /distance;
+            let forceDirectionY = dy /distance;
+            this.x += forceDirectionX * settings.magnet.force;
+            this.y += forceDirectionY * settings.magnet.force;
+        }
+
+    }
 }
 
 
@@ -73,6 +89,7 @@ function animate() {
     ctx.clearRect(0,0,canvas.width, canvas.height);
     particleArray.forEach( particle => {
         particle.draw();
+        particle.update();
     })
     requestAnimationFrame(animate)
 }
