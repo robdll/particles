@@ -7,13 +7,13 @@ const settings = {
     scanner: {
         sTop: 0,
         sLeft: 0,
-        width: 300,
-        height: 200
+        width: 350,
+        height: 300
     },
     opacityTreeshold: 128,
     line: {
         width: 2,
-        maxLength: 35,
+        maxLength: 45,
         color: 'rgba(255,255,255,1)'
     },
     magnet: {
@@ -37,7 +37,7 @@ canvas.style.letterSpacing = '2px';
 const particles = [];
 ctx.font = '21px Verdana';
 ctx.fillStyle = 'white';
-ctx.fillText('Test', 0, 30);
+ctx.fillText('te amo', 0, 30);
 const {sTop, sLeft, width, height} = settings.scanner;
 const textCoords = ctx.getImageData(sTop, sLeft, width, height);
 textCoords.data = textCoords.data.filter( (_, idx) => (idx + 1) % 4 === 0 );
@@ -98,8 +98,8 @@ function init() {
     let i = 0;
     for(let y=0; y < textCoords.height; y++ ) {
         for(let x=0; x < textCoords.width; x++) {
-            if(textCoords.data[i] > settings.opacityTreeshold) {
-                let positionX = (x * 8) + settings.offsetX;
+            if(textCoords.data[i] > settings.opacityTreeshold && x%4 === 0) {
+                let positionX = (x * 5) + settings.offsetX;
                 let positionY = (y * 5) + settings.offsetY;
                 particles.push(new Particle(positionX, positionY) );
             }
@@ -124,9 +124,9 @@ function connect() {
             let dx = particles[a].x - particles[b].x;
             let dy = particles[a].y - particles[b].y;
             let distance = Math.sqrt(dx * dx + dy * dy) ;
+            let color = settings.line.color;
+            let opacity = 1 - (distance/settings.line.maxLength);
             if(distance < settings.line.maxLength) {
-                let color = settings.line.color;
-                let opacity = 1 - (distance/settings.line.maxLength);
                 ctx.strokeStyle = color.replace('1', opacity );
                 ctx.lineWidth = settings.line.width;
                 ctx.beginPath()
