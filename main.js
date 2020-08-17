@@ -3,12 +3,12 @@
  */
 
 const settings = {
-    radius: 150,
+    radius: 50,
     scanner: {
         sTop: 0,
         sLeft: 0,
-        width: 200,
-        height: 100
+        width: window.innerWidth,
+        height: 200
     },
     magnet: {
         force: 12
@@ -25,12 +25,15 @@ const canvas = document.getElementById("canvas1");
 const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-const particleArray = [];
-ctx.font = '30px Verdana';
+canvas.style.letterSpacing = '5px';
+
+const particles = [];
+ctx.font = '20px Verdana';
 ctx.fillStyle = 'white';
 ctx.fillText('Test Text', 0, 30);
 const {sTop, sLeft, width, height} = settings.scanner;
-const data = ctx.getImageData(sTop, sLeft, width, height);
+const textCoords = ctx.getImageData(sTop, sLeft, width, height);
+textCoords.data = textCoords.data.filter( (_, idx) => (idx + 1) % 4 === 0 );
 
 /**
  * CLASS INITIALIZATION
@@ -43,6 +46,7 @@ class Particle {
         this.baseX = this.x;
         this.baseY = this.y;
         this.density = (Math.random() * 30) +1;
+        this.elasticity = (Math.random() * 10) +1
     }
 
     draw() {
@@ -78,22 +82,30 @@ class Particle {
  * PROGRAM BODY
  */
 
-init(canvas, particleArray);
+init();
 animate(); 
 
 
 
-function init(c, arr) {
-    for(let i = 0; i<100; i++) {
-        let x = Math.random() * c.width;
-        let y = Math.random() * c.height;
-        arr.push(new Particle(x, y));
+function init() {
+   /* for(let i = 0; i<100; i++) {
+        let x = Math.random() * canvas.width;
+        let y = Math.random() * canvas.height;
+        particles.push(new Particle(x, y));
+    }*/
+    let i = 0;
+    for(let y=0; y < textCoords.height; y++ ) {
+        for(let x=0; x < textCoords.width; x++, i++ ) {
+            if(textCoords.data[i] > 128) {
+                particles.push(new Particle(x, y) );
+            }
+        }
     }
 }
 
 function animate() {
     ctx.clearRect(0,0,canvas.width, canvas.height);
-    particleArray.forEach( particle => {
+    particles.forEach( particle => {
         particle.draw();
         particle.update();
     })
