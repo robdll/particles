@@ -46,7 +46,7 @@ class Particle {
         this.baseX = this.x;
         this.baseY = this.y;
         this.density = (Math.random() * 30) +1;
-        this.elasticity = (Math.random() * 10) +1
+        this.elasticity = (Math.random() * 30) +1
     }
 
     draw() {
@@ -59,9 +59,9 @@ class Particle {
     update() {
         let dx = mouse.x - this.x;
         let dy = mouse.y - this.y;
-        let distance = Math.sqrt(dx * dx + dy * dy);
+        let distance = Math.sqrt(dx * dx + dy * dy) ;
         //send away particle logic
-        let maxDistance = mouse.radius;
+        let maxDistance = mouse.radius + this.elasticity;
         let force = ( maxDistance - distance) / maxDistance;
         if (distance < maxDistance) {
             this.x -= (dx /distance) * force * this.density;
