@@ -3,7 +3,7 @@
  */
 
 const settings = {
-    radius: 150,
+    radius: 180,
     scanner: {
         sTop: 0,
         sLeft: 0,
@@ -17,7 +17,7 @@ const settings = {
         color: 'rgba(255,255,255,1)'
     },
     magnet: {
-        force: 12
+        force: 10
     },
     offsetX: 50,
     offsetY: 0
@@ -37,7 +37,7 @@ canvas.style.letterSpacing = '2px';
 const particles = [];
 ctx.font = '21px Verdana';
 ctx.fillStyle = 'white';
-ctx.fillText('te amo', 0, 30);
+ctx.fillText('<3 Code', 0, 30);
 const {sTop, sLeft, width, height} = settings.scanner;
 const textCoords = ctx.getImageData(sTop, sLeft, width, height);
 textCoords.data = textCoords.data.filter( (_, idx) => (idx + 1) % 4 === 0 );
@@ -71,6 +71,7 @@ class Particle {
         //send away particle logic
         let maxDistance = mouse.radius + this.elasticity;
         let force = ( maxDistance - distance) / maxDistance;
+        force *=2;
         if (distance < maxDistance) {
             this.x -= (dx /distance) * force * this.density;
             this.y -= (dy /distance) * force * this.density;
