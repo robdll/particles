@@ -7,7 +7,7 @@ const settings = {
     scanner: {
         sTop: 0,
         sLeft: 0,
-        width: 350,
+        width: 400,
         height: 300
     },
     opacityTreeshold: 128,
