@@ -11,8 +11,7 @@ const settings = {
         height: 100
     },
     magnet: {
-        range: 300,
-        force: 1
+        force: 12
     },
     offset: 0
 }
@@ -60,9 +59,14 @@ class Particle {
         //send away particle logic
         let maxDistance = mouse.radius;
         let force = ( maxDistance - distance) / maxDistance;
-        if(distance < maxDistance) {
+        if (distance < maxDistance) {
             this.x -= (dx /distance) * force * this.density;
             this.y -= (dy /distance) * force * this.density;
+        } else {
+            //return to base position logic
+            let magnetForce = settings.magnet.force;
+            if(this.x !== this.baseX) this.x -= (this.x - this.baseX)/magnetForce;
+            if(this.y !== this.baseY) this.y -= (this.y - this.baseY)/magnetForce;
         }
         
 
