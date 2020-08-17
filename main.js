@@ -3,17 +3,19 @@
  */
 
 const settings = {
-    radius: 50,
+    radius: 150,
     scanner: {
         sTop: 0,
         sLeft: 0,
-        width: window.innerWidth,
+        width: 300,
         height: 200
     },
+    opacityTreeshold: 128,
     magnet: {
         force: 12
     },
-    offset: 0
+    offsetX: 50,
+    offsetY: 0
 }
 const mouse = {
     x: null,
@@ -25,12 +27,12 @@ const canvas = document.getElementById("canvas1");
 const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-canvas.style.letterSpacing = '5px';
+canvas.style.letterSpacing = '2px';
 
 const particles = [];
-ctx.font = '20px Verdana';
+ctx.font = '21px Verdana';
 ctx.fillStyle = 'white';
-ctx.fillText('Test Text', 0, 30);
+ctx.fillText('Test', 0, 30);
 const {sTop, sLeft, width, height} = settings.scanner;
 const textCoords = ctx.getImageData(sTop, sLeft, width, height);
 textCoords.data = textCoords.data.filter( (_, idx) => (idx + 1) % 4 === 0 );
@@ -40,7 +42,7 @@ textCoords.data = textCoords.data.filter( (_, idx) => (idx + 1) % 4 === 0 );
  */
 class Particle {
     constructor(x, y, size = 3) {
-        this.x = x + settings.offset;
+        this.x = x;
         this.y = y;
         this.size = size;
         this.baseX = this.x;
@@ -56,6 +58,7 @@ class Particle {
         ctx.closePath();
         ctx.fill();
     }
+    
     update() {
         let dx = mouse.x - this.x;
         let dy = mouse.y - this.y;
@@ -95,10 +98,13 @@ function init() {
     }*/
     let i = 0;
     for(let y=0; y < textCoords.height; y++ ) {
-        for(let x=0; x < textCoords.width; x++, i++ ) {
-            if(textCoords.data[i] > 128) {
-                particles.push(new Particle(x, y) );
+        for(let x=0; x < textCoords.width; x++) {
+            if(textCoords.data[i] > settings.opacityTreeshold) {
+                let positionX = (x * 8) + settings.offsetX;
+                let positionY = (y * 5) + settings.offsetY;
+                particles.push(new Particle(positionX, positionY) );
             }
+            i++;
         }
     }
 }
