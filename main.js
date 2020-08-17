@@ -1,3 +1,7 @@
+/**
+ * INITIAL CONFIG
+ */
+
 const settings = {
     radius: 150,
     scanner: {
@@ -6,35 +10,28 @@ const settings = {
         width: 200,
         height: 100
     },
-    offset: 100
+    offset: 0
 }
-
-const canvas = document.getElementById("canvas1");
-const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-const particleArray = [];
-
 const mouse = {
     x: null,
     y: null,
     radius: settings.radius,
 };
 
-window.addEventListener('mousemove', event => {
-    mouse.x = event.x;
-    mouse.y = event.y;
-    //console.log(mouse.x, mouse.y)
-});
-
+const canvas = document.getElementById("canvas1");
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+const particleArray = [];
 ctx.font = '30px Verdana';
 ctx.fillStyle = 'white';
 ctx.fillText('Test Text', 0, 30);
-//ctx.strokeStyle = 'white';
-// ctx.strokeRect(sTop, sLeft, width, height);
 const {sTop, sLeft, width, height} = settings.scanner;
 const data = ctx.getImageData(sTop, sLeft, width, height);
 
+/**
+ * CLASS INITIALIZATION
+ */
 class Particle {
     constructor(x, y, size = 3) {
         this.x = x + settings.offset;
@@ -48,11 +45,43 @@ class Particle {
     draw() {
         ctx.fillStyle = 'white';
         ctx.beginPath();
-        ctx.ard(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.closePath();
         ctx.fill();
-        console.log('drowing')
     }
-
 }
+
+
+/**
+ * PROGRAM BODY
+ */
+
+init(canvas, particleArray);
+animate(); 
+
+
+
+function init(c, arr) {
+    for(let i = 0; i<100; i++) {
+        let x = Math.random() * c.width;
+        let y = Math.random() * c.height;
+        arr.push(new Particle(x, y));
+    }
+}
+
+function animate() {
+    ctx.clearRect(0,0,canvas.width, canvas.height);
+    particleArray.forEach( particle => {
+        particle.draw();
+    })
+    requestAnimationFrame(animate)
+}
+
+window.addEventListener('mousemove', event => {
+    mouse.x = event.x;
+    mouse.y = event.y;
+    //console.log(mouse.x, mouse.y)
+});
+
+
 
