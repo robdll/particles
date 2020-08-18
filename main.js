@@ -20,7 +20,8 @@ const settings = {
         force: 10
     },
     offsetX: 50,
-    offsetY: 0
+    offsetY: 0,
+    endedTouch: false
 }
 const mouse = {
     x: null,
@@ -33,11 +34,11 @@ const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 canvas.style.letterSpacing = '2px';
-
+const textString = window.innerWidth < 400 ? 'C' : 'Code' ; 
 const particles = [];
 ctx.font = '21px Verdana';
 ctx.fillStyle = 'white';
-ctx.fillText('<3 Code', 0, 30);
+ctx.fillText(textString, 0, 30);
 const {sTop, sLeft, width, height} = settings.scanner;
 const textCoords = ctx.getImageData(sTop, sLeft, width, height);
 textCoords.data = textCoords.data.filter( (_, idx) => (idx + 1) % 4 === 0 );
@@ -72,7 +73,7 @@ class Particle {
         let maxDistance = mouse.radius + this.elasticity;
         let force = ( maxDistance - distance) / maxDistance;
         force *=2;
-        if (distance < maxDistance) {
+        if (distance < maxDistance && !settings.endedTouch) {
             this.x -= (dx /distance) * force * this.density;
             this.y -= (dy /distance) * force * this.density;
         } else {
@@ -146,5 +147,18 @@ window.addEventListener('mousemove', event => {
     //console.log(mouse.x, mouse.y)
 });
 
+
+window.addEventListener('touchmove', event => {
+    settings.endedTouch = false;
+    mouse.x = event.touches[0].clientX;
+    mouse.y = event.touches[0].clientY;
+    console.log(event)
+});
+
+window.addEventListener('touchend', event => {
+    //mouse.x = event.touches[0].clientX;
+    //mouse.y = event.touches[0].clientY;
+    settings.endedTouch = true;
+});
 
 
