@@ -2,6 +2,7 @@
  * INITIAL CONFIG
  */
 
+
 const settings = {
     radius: 180,
     scanner: {
@@ -21,7 +22,8 @@ const settings = {
     },
     offsetX: 50,
     offsetY: 0,
-    endedTouch: false
+    endedTouch: false,
+    restart: false
 }
 const mouse = {
     x: null,
@@ -34,15 +36,26 @@ const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 canvas.style.letterSpacing = '2px';
-const textString = window.innerWidth < 400 ? 'C' : 'Code' ; 
-const particles = [];
+let particles = [];
 ctx.font = '21px Verdana';
 ctx.fillStyle = 'white';
+let textString = window.innerWidth < 400 ? 'C' : 'Code' ; 
 ctx.fillText(textString, 0, 30);
 const {sTop, sLeft, width, height} = settings.scanner;
-const textCoords = ctx.getImageData(sTop, sLeft, width, height);
+let textCoords = ctx.getImageData(sTop, sLeft, width, height);
 textCoords.data = textCoords.data.filter( (_, idx) => (idx + 1) % 4 === 0 );
 
+function changeText() {
+    settings.restart = true;
+    particles = [];
+    const text = document.getElementById("textInp").value;
+    textString = window.innerWidth < 400 ? text[0] : text; 
+    ctx.fillText(textString, 0, 30);
+    textCoords = ctx.getImageData(sTop, sLeft, width, height);
+    textCoords.data = textCoords.data.filter( (_, idx) => (idx + 1) % 4 === 0 );
+    init();
+    animate(); 
+}
 /**
  * CLASS INITIALIZATION
  */
@@ -92,11 +105,6 @@ init();
 animate(); 
 
 function init() {
-   /* for(let i = 0; i<100; i++) {
-        let x = Math.random() * canvas.width;
-        let y = Math.random() * canvas.height;
-        particles.push(new Particle(x, y));
-    }*/
     let i = 0;
     for(let y=0; y < textCoords.height; y++ ) {
         for(let x=0; x < textCoords.width; x++) {
@@ -108,6 +116,7 @@ function init() {
             i++;
         }
     }
+    settings.restart = false;
 }
 
 function animate() {
@@ -117,7 +126,7 @@ function animate() {
         particle.update();
     })
     connect();
-    requestAnimationFrame(animate)
+    if(!settings.restart) requestAnimationFrame(animate)
 }
 
 function connect() {
