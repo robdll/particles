@@ -34,22 +34,28 @@ const mouse = {
 const canvas = document.getElementById("canvas1");
 const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+canvas.height = window.innerHeight - (window.innerWidth <= 400 ? 175 : 115);
 canvas.style.letterSpacing = '2px';
 let particles = [];
-ctx.font = '21px Verdana';
+ctx.font = `${getTextSize()}px Verdana`;
 ctx.fillStyle = 'white';
-let textString = window.innerWidth < 400 ? 'C' : 'Code' ; 
+let textString = window.innerWidth < 800 ? 'C' : 'Code' ; 
 ctx.fillText(textString, 0, 30);
 const {sTop, sLeft, width, height} = settings.scanner;
 let textCoords = ctx.getImageData(sTop, sLeft, width, height);
 textCoords.data = textCoords.data.filter( (_, idx) => (idx + 1) % 4 === 0 );
 
+function getTextSize() {
+    if (window.innerWidth < 800) return 12;
+    if (window.innerWidth < 1200) return 18;
+    return 21;
+}
+
 function changeText() {
     settings.restart = true;
     particles = [];
     const text = document.getElementById("textInp").value;
-    textString = window.innerWidth < 400 ? text[0] : text; 
+    textString = window.innerWidth < 800 ? text[0] : text; 
     ctx.fillText(textString, 0, 30);
     textCoords = ctx.getImageData(sTop, sLeft, width, height);
     textCoords.data = textCoords.data.filter( (_, idx) => (idx + 1) % 4 === 0 );
