@@ -11,7 +11,7 @@ body {
 
 canvas {
     position: absolute;
-    top: 30px;
+    top: 175px;
     left: 0;
     right: 0;
     bottom: 0;
@@ -57,6 +57,10 @@ button {
     main {
         flex-direction: row;
         justify-content: center;
+    }
+
+    canvas {
+        top: 115px;
     }
     
 }
