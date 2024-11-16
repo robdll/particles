@@ -4,7 +4,7 @@
 
 
 const settings = {
-    radius: 180,
+    radius: 80,
     scanner: {
         sTop: 0,
         sLeft: 0,
@@ -21,7 +21,7 @@ const settings = {
         force: 10
     },
     offsetX: 50,
-    offsetY: 0,
+    offsetY: -200,
     endedTouch: false,
     restart: false
 }
@@ -73,7 +73,7 @@ class Particle {
         this.baseX = this.x;
         this.baseY = this.y;
         this.density = (Math.random() * 30) +1;
-        this.elasticity = (Math.random() * 30) +1
+        this.elasticity = (Math.random() * 50) +1
     }
 
     draw() {
