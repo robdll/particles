@@ -66,14 +66,16 @@ function changeText() {
  * CLASS INITIALIZATION
  */
 class Particle {
+    
     constructor(x, y, size = 3) {
         this.x = x;
         this.y = y;
         this.size = size;
         this.baseX = this.x;
         this.baseY = this.y;
-        this.density = (Math.random() * 30) +1;
-        this.elasticity = (Math.random() * 50) +1
+        this.density = Math.random() * 30 + 1;
+        this.elasticity = Math.random() * 50 + 1;
+        this.maxDistance = mouse.radius + this.elasticity;
     }
 
     draw() {
@@ -83,26 +85,21 @@ class Particle {
         ctx.closePath();
         ctx.fill();
     }
-    
+
     update() {
         let dx = mouse.x - this.x;
         let dy = mouse.y - this.y;
-        let distance = Math.sqrt(dx * dx + dy * dy) ;
-        //send away particle logic
-        let maxDistance = mouse.radius + this.elasticity;
-        let force = ( maxDistance - distance) / maxDistance;
-        force *=2;
-        if (distance < maxDistance && !settings.endedTouch) {
-            this.x -= (dx /distance) * force * this.density;
-            this.y -= (dy /distance) * force * this.density;
-        } else {
-            //return to base position logic
-            let magnetForce = settings.magnet.force;
-            if(this.x !== this.baseX) this.x -= (this.x - this.baseX)/magnetForce;
-            if(this.y !== this.baseY) this.y -= (this.y - this.baseY)/magnetForce;
-        }
-        
+        let distance = Math.sqrt(dx * dx + dy * dy);
 
+        if (distance < this.maxDistance && !settings.endedTouch) {
+            let force = (this.maxDistance - distance) / this.maxDistance;
+            this.x -= (dx / distance) * force * this.density * 2;
+            this.y -= (dy / distance) * force * this.density * 2;
+        } else {
+            let magnetForce = settings.magnet.force;
+            this.x -= (this.x - this.baseX) / magnetForce;
+            this.y -= (this.y - this.baseY) / magnetForce;
+        }
     }
 }
 
